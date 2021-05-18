@@ -7,7 +7,7 @@ try:
     port=int(config['DB_PORT']), #db port
     serverSelectionTimeoutMS=1000
   )
-  db = mongo.config['DB_NAME'] #db_name
+  db = mongo[config['DB_NAME']] #db_name
   mongo.server_info()
   print('Connected to DB')
 except Exception as err:

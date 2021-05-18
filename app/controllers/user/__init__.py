@@ -1,33 +1,33 @@
-from flask import Flask, request, Response
+from flask import request
 from bson.objectid import ObjectId
 from json import dumps
 from pymongo import ReturnDocument
-import asyncio
 from ...connection import db
 from ...helpers import ResponseHelper
 
 response_helper = ResponseHelper()
 
-class UserControllers:
+class UserController:
   # GET
   def get_user(self):
     try:
-      result = list(db.users.find())
-      for user in result:
+      user_data = list(db.users.find())
+      for user in user_data:
+        user['created_at'] = str(user['_id'].generation_time)
         user['_id'] = str(user['_id'])
         del user['password']
-      if len(result) <= 0:
-        result = 'empty'
-      return response_helper.success_response('Success get users', result)
+      if len(user_data) <= 0:
+        user_data = 'empty'
+      return response_helper.success_response('Success get users', user_data)
     except Exception as err:
       print(err)
       return response_helper.fail_response('Get user failed', 401)
   def get_user_by_id(self, id):
     try:
-      result = db.users.find_one({'_id': ObjectId(id)})
-      result['_id'] = str(result['_id'])
-      del result['password']
-      return response_helper.success_response('Success get user by id', result)
+      user_data = db.users.find_one({'_id': ObjectId(id)})
+      user_data['_id'] = str(user_data['_id'])
+      del user_data['password']
+      return response_helper.success_response('Success get user by id', user_data)
     except Exception as err:
       msg = str(err)
       print(err)
@@ -44,13 +44,7 @@ class UserControllers:
         upsert=False,
         return_document=ReturnDocument.AFTER
       )
-      result = {
-        '_id': id,
-        'first_name': update_data['first_name'],
-        'last_name': update_data['last_name'],
-        'username': update_data['username']
-      }
-      return response_helper.success_response('Success update user', result)
+      return response_helper.success_response('Success update user', update_data)
     except Exception as err:
       msg = str(err)
       print(err)

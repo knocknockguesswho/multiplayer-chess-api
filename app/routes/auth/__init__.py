@@ -11,3 +11,7 @@ def sign_up():
 @auth.route('/signin', methods=['POST'])
 def sign_in():
   return controller.sign_in()
+
+@auth.route('/signout/<string:id>', methods=['POST'])
+def sign_out(id):
+  return controller.sign_out(id)
