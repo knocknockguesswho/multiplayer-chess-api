@@ -17,4 +17,4 @@
 # Available Services
 - [x] **User:** /api/v1/user
 - [x] **Auth:** /api/v1/auth
-- [ ] **Auth:** /api/v1/game
+- [x] **Auth:** /api/v1/game
